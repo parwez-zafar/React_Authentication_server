@@ -28,6 +28,31 @@ const userScheema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    date: {
+        type: Date,
+        default: Date.now
+    },
+    messages: [
+        {
+            name: {
+                type: String,
+                requird: true,
+            },
+            email: {
+                type: String,
+                required: true,
+
+            },
+            phone: {
+                type: Number,
+                required: true,
+            },
+            message: {
+                type: String,
+                required: true,
+            },
+        }
+    ],
     tokens: [
         {
             token: {
@@ -61,6 +86,22 @@ userScheema.methods.generateAuthToken = async function () {
     catch (err) {
         console.log(err);
     }
+}
+
+
+// adding message field
+userScheema.methods.addMessage = async function (name, email, phone, message) {
+    try {
+        this.messages = await this.messages.concat({ name, email, phone, message });
+        console.log(this.messages);
+        await this.save();
+
+        return this.messages;
+    }
+    catch (err) {
+        console.log(err);
+    }
+
 }
 
 const User = mongoose.model('USER', userScheema);

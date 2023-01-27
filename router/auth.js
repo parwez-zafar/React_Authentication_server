@@ -7,6 +7,7 @@ const User = require('../model/userScheema');
 const bcrypt = require('bcryptjs');
 const lodash = require("lodash")
 const authenticate = require('../middleware/authenticate');
+const { findOne } = require('../model/userScheema');
 
 // router.get('/', (req, res) => {
 //     res.send("Home Page from router");
@@ -118,5 +119,38 @@ router.get('/checkLog', authenticate, (req, res) => {
     res.status(200).send("user")
 })
 
+// contact page
+router.post('/contactD', authenticate, async (req, res) => {
+    try {
+        const { name, email, phone, message } = req.body;
+        // console.log(req.body);
+        if (!name || !email || !phone || !message) {
+            console.log("error in contact form");
+            return res.json({ error: "fill message" })
+        }
+
+        const userData = await User.findOne({ _id: req.userId });
+
+        if (userData) {
+            const userMessage = await userData.addMessage(name, email, phone, message);
+            await userData.save();
+
+            res.status(201).json({ message: "message sent successfully" });
+        }
+    }
+    catch (error) {
+        console.log(err);
+
+    }
+
+})
+
+
+// Logout page
+router.get('/logout', (req, res) => {
+    res.clearCookie('jwt_tokens', { path: '/' });
+    console.log("logout page ");
+    res.status(200).send("Logut page");
+})
 
 module.exports = router;
