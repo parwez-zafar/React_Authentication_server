@@ -79,7 +79,7 @@ router.post('/login', async (req, res) => {
             let token = await login_email.generateAuthToken();
 
             // saving tokens to cookies
-            console.log('saving');
+            // console.log('saving');
             res.cookie("jwt_tokens", token, {
                 expires: new Date(Date.now() + 2592000000),
                 httpOnly: true,
@@ -149,7 +149,7 @@ router.post('/contactD', authenticate, async (req, res) => {
 // Logout page
 router.get('/logout', (req, res) => {
     res.clearCookie('jwt_tokens', { path: '/' });
-    console.log("logout page ");
+    // console.log("logout page ");
     res.status(200).send("Logut page");
 })
 
