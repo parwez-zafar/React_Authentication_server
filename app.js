@@ -19,7 +19,7 @@ dotenv.config({
 
 
 // creating port
-const PORT = 8000 || process.env.PORT;
+const PORT = process.env.PORT || 8000;
 
 
 // importing DataBase
@@ -45,7 +45,9 @@ app.use(express.json());
 // Routing
 app.use(require('./router/auth'));
 
-
+if (process.env.NODE_ENV == 'production') {
+    app.use(express.static("client/build"))
+}
 
 
 app.listen(PORT, () => {
